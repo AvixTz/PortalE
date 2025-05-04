@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog to Email Marketing Converter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Add html2canvas for screenshot functionality -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2980b9;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+            --border-color: #ddd;
+            --panel-bg: white;
+            --header-color: #2c3e50;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rubik', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            direction: ltr;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--panel-bg);
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        
+        h1, h2, h3 {
+            color: var(--header-color);
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Rubik', sans-serif;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            font-family: 'Rubik', sans-serif;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background-color: #2473a6;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #emailPreview {
+            margin-top: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            background-color: var(--panel-bg);
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: 'Rubik', sans-serif;
+        }
+        
+        .email-header {
+            text-align: center;
+            padding: 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .email-logo {
+            max-width: 200px;
+            height: auto;
+            margin: 0 auto 15px auto;
+            display: block;
+        }
+        
+        .email-content {
+            padding: 30px;
+            background-color: white;
+            border-left: 1px solid #e7e7e7;
+            border-right: 1px solid #e7e7e7;
+        }
+        
+        .email-footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            background-color: #f8f9fa;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #e7e7e7;
+            border-top: none;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+        
+        #loadingIndicator {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab-button {
+            padding: 12px 24px;
+            background-color: #f5f5f5;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 500;
+        }
+        
+        .tab-button.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .download-button {
+            background-color: #8e44ad;
+        }
+        
+        .gmail-button {
+            background-color: var(--accent-color);
+        }
+        
+        .screenshot-button {
+            background-color: #f39c12;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .error {
+            color: var(--accent-color);
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: rgba(231, 76, 60, 0.1);
+            border-radius: 4px;
+            border-left: 4px solid var(--accent-color);
+            display: none;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .email-divider {
+            height: 2px;
+            background-color: var(--primary-color);
+            margin: 20px 0;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .example-button {
+            background-color: #f5f5f5;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .example-button:hover {
+            background-color: #e7e7e7;
+            transform: translateY(-2px);
+        }
+        
+        .filter-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .filter-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .flex-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .flex-column {
+            flex: 1;
+        }
+        
+        .preview-panel {
+            display: flex;
+            gap: 20px;
+            position: relative;
+        }
+        
+        .preview-content {
+            flex: 3;
+            max-width: calc(100% - 320px);
+        }
+        
+        .sidebar {
+            flex: 1;
+            max-width: 300px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e7e7e7;
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+        
+        .sidebar h3 {
+            margin-top: 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-section-title {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 1000px) {
+            .preview-panel {
+                flex-direction: column;
+            }
+            
+            .preview-content {
+                max-width: 100%;
+            }
+            
+            .sidebar {
+                position: relative;
+                max-width: 100%;
+                height: auto;
+                margin-top: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .flex-row {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+                margin-right: 0;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+        
+        /* Enhanced input customization */
+        input[type="color"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 8px;
+        }
+        
+        /* Custom checkbox styling */
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .custom-checkbox input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        
+        .checkmark {
+            height: 20px;
+            width: 20px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            border: 1px solid #ddd;
+        }
+        
+        .custom-checkbox:hover input ~ .checkmark {
+            background-color: #ccc;
+        }
+        
+        .custom-checkbox input:checked ~ .checkmark {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .checkmark:after {
+            content: "";
+            display: none;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .custom-checkbox input:checked ~ .checkmark:after {
+            display: block;
+        }
+        
+        /* Email content styling */
+        .article-container img {
+            display: block;
+            margin: 15px auto;
+            max-width: 100%;
+        }
+        
+        /* Status indicator */
+        .status-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(41, 128, 185, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        /* Capture container for screenshot */
+        #screenshotContainer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            overflow: auto;
+            padding: 20px;
+        }
+        
+        #screenshotContent {
+            background-color: white;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        #screenshotClose {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+        }
+        
+        #screenshotClose:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        #screenshotActions {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* Enhanced screenshot preview styles */
+        #screenshotContent canvas {
+            width: 100% !important;
+            max-width: 100% !important; 
+            height: auto !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blog to Email Marketing Converter</h1>
+        
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="auto">Automatic Conversion</button>
+            <button class="tab-button" data-tab="manual">Manual Conversion</button>
+        </div>
+
+        <div id="autoTab" class="tab-content active">
+            <div class="form-group">
+                <label for="blogUrl">Blog URL:</label>
+                <input type="text" id="blogUrl" value="https://www.prettyhow.com/mister-spex-din-perfekta-destination-for-glasogon-och-solglasogon/" placeholder="Enter blog URL">
+            </div>
+            
+            <div class="examples">
+                <span>Try these examples: </span>
+                <button class="example-button" data-url="https://www.prettyhow.com/mister-spex-din-perfekta-destination-for-glasogon-och-solglasogon/">Mister Spex</button>
+                <button class="example-button" data-url="https://www.technoblogi.com/discover-your-unique-style-elevate-your-wardrobe-with-joe-browns/">Joe Browns</button>
+                <button class="example-button" data-url="https://www.jourjurnal.com/electrify-your-nights-grease-the-musical-hits-the-road-on-uk-ireland-tour-2024/">Grease Musical</button>
+                <button class="example-button" data-url="https://www.postpeaks.com/rusten-sie-sich-mit-den-besten-paintball-trikots-von-paintball-sports-aus-leistung-trifft-auf-komfort/">Paintball Sports</button>
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px; text-align: center;">
+                <button id="fetchButton">Fetch Blog Content</button>
+            </div>
+            
+            <div id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Loading blog content...</p>
+            </div>
+            
+            <div id="errorMessage" class="error"></div>
+        </div>
+
+        <div id="manualTab" class="tab-content">
+            <div class="form-group">
+                <label for="blogContent">Paste Blog Content:</label>
+                <textarea id="blogContent" rows="10" placeholder="Paste the HTML code of the blog page here"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="blogLogo">Logo URL (optional):</label>
+                <input type="text" id="blogLogo" placeholder="Enter the logo image URL">
+            </div>
+            
+            <div class="form-group" style="text-align: center;">
+                <button id="processButton">Generate Email Marketing</button>
+            </div>
+        </div>
+        
+        <div id="emailPreview" style="display: none;">
+            <h2>Email Marketing Preview</h2>
+            <div class="tab-buttons">
+                <button class="tab-button active" data-preview-tab="visual">Visual Preview</button>
+                <button class="tab-button" data-preview-tab="html">HTML Code</button>
+            </div>
+            
+            <div id="visualPreview" class="tab-content active">
+                <div class="preview-panel">
+                    <div class="preview-content">
+                        <div id="emailContent"></div>
+                    </div>
+                    <div class="sidebar">
+                        <div class="sidebar-section">
+                            <h3>Email Appearance</h3>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="show_header" checked>
+                                    <span class="checkmark"></span>
+                                    Show Header
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="show_logo" checked>
+                                    <span class="checkmark"></span>
+                                    Show Logo
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="show_title" checked>
+                                    <span class="checkmark"></span>
+                                    Show Title
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="show_content" checked>
+                                    <span class="checkmark"></span>
+                                    Show Content
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="show_cta" checked>
+                                    <span class="checkmark"></span>
+                                    Show CTA Button
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="show_footer" checked>
+                                    <span class="checkmark"></span>
+                                    Show Footer
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="show_social" checked>
+                                    <span class="checkmark"></span>
+                                    Show Social Icons
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Content Filters</div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_header_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Headers & Nav
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_breadcrumbs_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Breadcrumbs
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_metadata_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Metadata
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_author_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Author Info
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_related_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Related Posts
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_social_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Social Buttons
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_pagination_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Pagination
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="preserve_images_side" checked>
+                                    <span class="checkmark"></span>
+                                    Preserve All Images
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_specific_side" checked>
+                                    <span class="checkmark"></span>
+                                    Remove Site-Specific Elements
+                                </label>
+                            </div>
+                            <div class="filter-item">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox" id="remove_admin_date_comment" checked>
+                                    <span class="checkmark"></span>
+                                    Remove "Admin Date Comment"
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Styling</div>
+                            <div style="margin-bottom: 15px;">
+                                <label for="preview_font">Font Family:</label>
+                                <select id="preview_font" style="width: 100%; margin-top: 5px;">
+                                    <option value="Rubik">Rubik</option>
+                                    <option value="Arial, sans-serif">Arial</option>
+                                    <option value="Helvetica, sans-serif">Helvetica</option>
+                                    <option value="Georgia, serif">Georgia</option>
+                                    <option value="Verdana, sans-serif">Verdana</option>
+                                    <option value="Tahoma, sans-serif">Tahoma</option>
+                                    <option value="'Times New Roman', serif">Times New Roman</option>
+                                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                                    <option value="'Courier New', monospace">Courier New</option>
+                                </select>
+                            </div>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <label for="preview_header_color">Header Color:</label>
+                                <input type="color" id="preview_header_color" value="#2980b9" style="width: 100%; margin-top: 5px;">
+                            </div>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <label for="preview_button_color">Button Color:</label>
+                                <input type="color" id="preview_button_color" value="#2980b9" style="width: 100%; margin-top: 5px;">
+                            </div>
+                        </div>
+                        
+                        <button id="update_preview" style="width: 100%; margin-top: 15px;">Update Preview</button>
+                        <button id="reprocess_content" style="width: 100%; margin-top: 10px; background-color: #e67e22;">Reprocess Content</button>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="download-button" id="downloadHtml">Download Email</button>
+                    <button class="gmail-button" id="sendGmail">Send via Gmail</button>
+                    <button class="screenshot-button" id="takeScreenshot">Screenshot PNG</button>
+                    <button id="debugBtn" style="background-color: #9b59b6;">Debug View</button>
+                </div>
+            </div>
+            
+            <div id="htmlPreview" class="tab-content">
+                <textarea id="htmlCode" rows="20" readonly></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Screenshot Container -->
+    <div id="screenshotContainer">
+        <div id="screenshotClose">&times;</div>
+        <div id="screenshotContent"></div>
+        <div id="screenshotActions">
+            <button id="downloadScreenshot" class="download-button">Download Screenshot</button>
+        </div>
+    </div>
+    
+    <div class="status-indicator" id="statusIndicator"></div>
+
+    <script>
+        // Load blog page when button is clicked
+        document.getElementById('fetchButton').addEventListener('click', function() {
+            fetchBlogContent();
+        });
+
+        // Example button event listeners
+        document.querySelectorAll('.example-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                document.getElementById('blogUrl').value = url;
+                fetchBlogContent();
+            });
+        });
+
+        function fetchBlogContent() {
+            const blogUrl = document.getElementById('blogUrl').value.trim();
+            if (!blogUrl) {
+                showError('Please enter a valid blog URL');
+                return;
+            }
+            
+            showLoading(true);
+            try {
+                // Using a CORS proxy to bypass CORS restrictions
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(blogUrl);
+                
+                fetch(proxyUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch blog content');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.contents) {
+                            processContent(data.contents, blogUrl);
+                        } else {
+                            throw new Error('Invalid content received');
+                        }
+                    })
+                    .catch(error => {
+                        showError('Failed to load the blog: ' + error.message + '. Try using the manual method.');
+                    })
+                    .finally(() => {
+                        showLoading(false);
+                    });
+            } catch (error) {
+                showError('Error: ' + error.message);
+                showLoading(false);
+            }
+        }
+
+        // Process manual content
+        document.getElementById('processButton').addEventListener('click', function() {
+            const blogContent = document.getElementById('blogContent').value.trim();
+            if (!blogContent) {
+                showError('Please paste the blog content');
+                return;
+            }
+            
+            processContent(blogContent);
+        });
+        
+        // Reprocess content with current sidebar settings
+        document.getElementById('reprocess_content').addEventListener('click', function() {
+            const blogUrl = document.getElementById('blogUrl').value.trim();
+            if (blogUrl) {
+                showStatus('Reprocessing content...');
+                fetchBlogContent();
+            } else {
+                const blogContent = document.getElementById('blogContent').value.trim();
+                if (blogContent) {
+                    showStatus('Reprocessing content...');
+                    processContent(blogContent);
+                } else {
+                    showError('No content to reprocess. Please fetch or paste blog content first.');
+                }
+            }
+        });
+
+        // Show status message
+        function showStatus(message, duration = 3000) {
+            const statusIndicator = document.getElementById('statusIndicator');
+            statusIndicator.textContent = message;
+            statusIndicator.style.display = 'block';
+            
+            setTimeout(() => {
+                statusIndicator.style.display = 'none';
+            }, duration);
+        }
+
+// Process the blog content and generate email marketing
+        function processContent(htmlContent, blogUrl = '') {
+            try {
+                // Get filter settings from sidebar
+                const filterSettings = {
+                    removeHeader: document.getElementById('remove_header_side')?.checked ?? true,
+                    removeBreadcrumbs: document.getElementById('remove_breadcrumbs_side')?.checked ?? true,
+                    removeMetadata: document.getElementById('remove_metadata_side')?.checked ?? true,
+                    removeAuthor: document.getElementById('remove_author_side')?.checked ?? true,
+                    removeRelated: document.getElementById('remove_related_side')?.checked ?? true, 
+                    removeSocial: document.getElementById('remove_social_side')?.checked ?? true,
+                    removePagination: document.getElementById('remove_pagination_side')?.checked ?? true,
+                    preserveImages: document.getElementById('preserve_images_side')?.checked ?? true,
+                    removeSpecific: document.getElementById('remove_specific_side')?.checked ?? true,
+                    removeAdminDateComment: document.getElementById('remove_admin_date_comment')?.checked ?? true
+                };
+                
+                // Create DOM from content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+                
+                // Find logo
+                let logoUrl = document.getElementById('blogLogo').value.trim();
+                if (!logoUrl) {
+                    // Automatic logo search
+                    const logoImg = doc.querySelector('header img, .logo img, .site-logo img, .navbar-brand img, .brand img');
+                    if (logoImg) {
+                        logoUrl = logoImg.src;
+                        // Fix relative URL
+                        if (logoUrl && (logoUrl.startsWith('/') || !logoUrl.startsWith('http'))) {
+                            try {
+                                const urlObj = new URL(blogUrl || document.getElementById('blogUrl').value);
+                                if (logoUrl.startsWith('/')) {
+                                    logoUrl = urlObj.origin + logoUrl;
+                                } else {
+                                    const pathParts = urlObj.pathname.split('/');
+                                    pathParts.pop();
+                                    const basePath = pathParts.join('/');
+                                    logoUrl = urlObj.origin + basePath + '/' + logoUrl;
+                                }
+                            } catch (e) {
+                                console.error('Error fixing logo URL:', e);
+                            }
+                        }
+                    }
+                }
+                
+                // Find title - improved to ensure we get the actual blog post title
+                let title = '';
+                // Try multiple selectors to find the most specific title first
+                const titleSelectors = [
+                    'article h1.entry-title', 
+                    'h1.entry-title', 
+                    'h1.post-title', 
+                    '.post-header h1', 
+                    'article h1:first-of-type',
+                    'h1:first-of-type',
+                    'h1'
+                ];
+                
+                for (const selector of titleSelectors) {
+                    const titleElem = doc.querySelector(selector);
+                    if (titleElem) {
+                        title = titleElem.innerText.trim();
+                        break;
+                    }
+                }
+                
+                // If still no title found, try document title or fallback
+                if (!title) {
+                    title = doc.title || "Blog Post";
+                    // Clean up document title if needed (remove site name)
+                    if (title.includes(' - ')) {
+                        title = title.split(' - ')[0].trim();
+                    } else if (title.includes(' | ')) {
+                        title = title.split(' | ')[0].trim();
+                    }
+                }
+                
+                // Use our improved featured image finder instead of the old code
+                let featuredImage = findFeaturedImage(doc, blogUrl || document.getElementById('blogUrl').value);
+                
+                // Find all images in the article
+                let allArticleImages = [];
+                if (filterSettings.preserveImages) {
+                    const contentSelectors = [
+                        'article .entry-content', 
+                        '.entry-content', 
+                        '.post-content', 
+                        'article .content',
+                        'article',
+                        '.single-content',
+                        '.main-content'
+                    ];
+                    
+                    let contentElement = null;
+                    for (const selector of contentSelectors) {
+                        const element = doc.querySelector(selector);
+                        if (element) {
+                            contentElement = element;
+                            break;
+                        }
+                    }
+                    
+                    if (contentElement) {
+                        const imageElements = contentElement.querySelectorAll('img');
+                        imageElements.forEach(img => {
+                            // Skip small thumbnails/icons
+                            if (!img.src.includes('-150x150') && 
+                                !img.classList.contains('avatar') && 
+                                !img.classList.contains('wp-smiley') &&
+                                !img.src.includes('emoji')) {
+                                // Fix relative URL
+                                let imgSrc = img.src;
+                                if (imgSrc && (imgSrc.startsWith('/') || !imgSrc.startsWith('http'))) {
+                                    try {
+                                        const urlObj = new URL(blogUrl || document.getElementById('blogUrl').value);
+                                        if (imgSrc.startsWith('/')) {
+                                            imgSrc = urlObj.origin + imgSrc;
+                                        } else {
+                                            const pathParts = urlObj.pathname.split('/');
+                                            pathParts.pop();
+                                            const basePath = pathParts.join('/');
+                                            imgSrc = urlObj.origin + basePath + '/' + imgSrc;
+                                        }
+                                    } catch (e) {
+                                        console.error('Error fixing image URL:', e);
+                                    }
+                                }
+                                
+                                const imgClone = img.cloneNode(true);
+                                imgClone.src = imgSrc;
+                                // Make sure all images are display:block and centered
+                                imgClone.style.display = 'block';
+                                imgClone.style.margin = '15px auto';
+                                imgClone.style.maxWidth = '100%';
+                                
+                                allArticleImages.push(imgClone);
+                            }
+                        });
+                    }
+                }
+                
+                // Find article content with more specific approach
+                let mainContent = '';
+                
+                // Try to find the article container
+                let articleElem = null;
+                const articleSelectors = [
+                    'article .entry-content',
+                    '.entry-content',
+                    '.post-content',
+                    'article .content',
+                    'article',
+                    '.single-content',
+                    '.single-post-content',
+                    '.main-content'
+                ];
+                
+                for (const selector of articleSelectors) {
+                    const element = doc.querySelector(selector);
+                    if (element) {
+                        articleElem = element;
+                        break;
+                    }
+                }
+                
+                if (!articleElem) {
+                    console.log("Could not find main article element, searching deeper");
+                    // Try more general approach if first attempt fails
+                    const possibleArticleContainers = doc.querySelectorAll('.container, .content-wrapper, .main-content, .site-content, #primary, #main');
+                    for (const container of possibleArticleContainers) {
+                        // Look for elements with substantial content inside these containers
+                        const paragraphs = container.querySelectorAll('p');
+                        if (paragraphs.length > 5) {
+                            articleElem = container;
+                            break;
+                        }
+                    }
+                }
+                
+                if (articleElem) {
+                    // Create a deep clone to modify
+                    const articleClone = articleElem.cloneNode(true);
+                    
+                    // Build selector list based on filter settings
+                    const selectorsToRemove = [];
+                    
+                    if (filterSettings.removeHeader) {
+                        selectorsToRemove.push('header', '.header', '#header', '.site-header', '.navbar', '.nav-menu');
+                    }
+                    
+                    if (filterSettings.removeBreadcrumbs) {
+                        selectorsToRemove.push('.breadcrumbs', '.breadcrumb', '.breadcrumb-inner', '.nav-breadcrumb');
+                    }
+                    
+                    if (filterSettings.removeMetadata) {
+                        selectorsToRemove.push('.post-meta', '.meta', '.entry-meta', '.post-info', '.single-meta', '.none-updated');
+                    }
+                    
+                    if (filterSettings.removeAuthor) {
+                        selectorsToRemove.push('.author-bio', '.author-box', '.author-info', '.about-author', '.post-author');
+                    }
+                    
+                    if (filterSettings.removeRelated) {
+                        selectorsToRemove.push('.related-posts', '.related', '.you-might-also-like', '.yarpp-related', '[id*="related"]', '[class*="related"]');
+                    }
+                    
+                    if (filterSettings.removeSocial) {
+                        selectorsToRemove.push('.social-share', '.share-buttons', '[class*="share"]', '[id*="share"]', '.social-icons');
+                    }
+                    
+                    if (filterSettings.removePagination) {
+                        selectorsToRemove.push('.pagination', '.post-navigation', '.nav-links', '.previous-next', '.prev-next', '.entry-sec.entry-pagination', '.e-pagi', '.mobile-hide');
+                    }
+                    
+                    // Include additional site-specific selectors
+                    if (filterSettings.removeSpecific) {
+                        selectorsToRemove.push(
+                            '.p-categories', 
+                            '.ruby-table-contents', '.rbtoc', '.table-fw',
+                            '.heading-inner',
+                            '.comments', '#comments', '.comment-area', '.comment-section',
+                            '.ads', '.ad-container', '.advertisement', '.adsbygoogle',
+                            '.sidebar', '#sidebar', '.widget-area', '.widgets-area',
+                            'footer', '.footer', '#footer', '.site-footer',
+                            '.table-of-contents', '.toc'
+                        );
+                    }
+                    
+                    // Remove all specified elements
+                    selectorsToRemove.forEach(selector => {
+                        const elements = articleClone.querySelectorAll(selector);
+                        elements.forEach(el => {
+                            if (el && el.parentNode) {
+                                el.parentNode.removeChild(el);
+                            }
+                        });
+                    });
+                    
+                    // Specifically look for and remove pagination
+                    if (filterSettings.removePagination) {
+                        const paginationElements = articleClone.querySelectorAll('.entry-sec.entry-pagination, .e-pagi, .mobile-hide');
+                        paginationElements.forEach(el => {
+                            if (el && el.parentNode) {
+                                el.parentNode.removeChild(el);
+                            }
+                        });
+                    }
+                    
+                    // Remove "Admin April 21, 2024 Leave a comment" text
+                    if (filterSettings.removeAdminDateComment) {
+                        // First try to find exact text
+                        const allTextNodes = [];
+                        const walker = document.createTreeWalker(
+                            articleClone,
+                            NodeFilter.SHOW_TEXT,
+                            null,
+                            false
+                        );
+                        
+                        let node;
+                        while (node = walker.nextNode()) {
+                            const text = node.textContent.trim();
+                            if (text.includes('Admin') && 
+                                (text.includes('Leave a comment') || text.includes('Comments'))) {
+                                allTextNodes.push(node);
+                            }
+                        }
+                        
+                        allTextNodes.forEach(node => {
+                            if (node.parentNode) {
+                                // Look for parent elements to remove
+                                let current = node.parentNode;
+                                // Try to find a larger container to remove
+                                while (current && 
+                                       current.tagName !== 'ARTICLE' && 
+                                       current.tagName !== 'DIV' && 
+                                       !current.classList.contains('entry-content')) {
+                                    current = current.parentNode;
+                                }
+                                
+                                if (current && current.tagName === 'DIV') {
+                                    current.parentNode?.removeChild(current);
+                                } else if (node.parentNode) {
+                                    node.parentNode.removeChild(node);
+                                }
+                            }
+                        });
+                        
+                        // Also try to remove common containers for this info
+                        const metaContainers = articleClone.querySelectorAll('.entry-meta, .post-meta, .meta, .post-date, .byline');
+                        metaContainers.forEach(container => {
+                            if (container.textContent.includes('Admin') || 
+                                container.textContent.includes('Comment') ||
+                                container.textContent.includes('April') ||
+                                container.textContent.includes('2024')) {
+                                container.parentNode?.removeChild(container);
+                            }
+                        });
+                    }
+                    
+                    // Remove "heading-inner" and everything beneath it if needed
+                    if (filterSettings.removeSpecific) {
+                        const headingInner = articleClone.querySelector('.heading-inner');
+                        if (headingInner) {
+                            // If we found a heading-inner, remove it and any following siblings
+                            let current = headingInner;
+                            while (current) {
+                                const next = current.nextSibling;
+                                if (current.parentNode) {
+                                    current.parentNode.removeChild(current);
+                                }
+                                current = next;
+                            }
+                        }
+                    }
+                    
+                    // Remove all SHARE text
+                    if (filterSettings.removeSocial) {
+                        const allTextNodes = [];
+                        const walker = document.createTreeWalker(
+                            articleClone,
+                            NodeFilter.SHOW_TEXT,
+                            null,
+                            false
+                        );
+                        
+                        let node;
+                        while (node = walker.nextNode()) {
+                            if (node.textContent.trim() === 'SHARE' || 
+                                node.textContent.trim() === 'Share' || 
+                                node.textContent.includes('Share this')) {
+                                allTextNodes.push(node);
+                            }
+                        }
+                        
+                        allTextNodes.forEach(node => {
+                            if (node.parentNode) {
+                                // Check if parent is small or has few children
+                                const parent = node.parentNode;
+                                if (parent.childNodes.length <= 3 || 
+                                    parent.tagName === 'SMALL' || 
+                                    parent.tagName === 'SPAN' ||
+                                    parent.classList.contains('share')) {
+                                    parent.parentNode?.removeChild(parent);
+                                } else {
+                                    parent.removeChild(node);
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Remove breadcrumbs/navigation at top
+                    if (filterSettings.removeBreadcrumbs) {
+                        const paragraphs = articleClone.querySelectorAll('p');
+                        for (const p of paragraphs) {
+                            const text = p.innerHTML;
+                            if (text.includes(' > ') && 
+                               (text.includes('Fashion Trends') || 
+                                text.includes('Home'))) {
+                                p.parentNode?.removeChild(p);
+                            }
+                        }
+                    }
+
+                    // Get the content
+                    mainContent = articleClone.innerHTML;
+                    
+                    // If content is too small or empty, try a more direct approach
+                    if (!mainContent || mainContent.trim().length < 200) {
+                        console.log("Content extraction may have removed too much, using original content");
+                        // Direct approach - find paragraphs with substantial content
+                        const contentParagraphs = [];
+                        const allParagraphs = articleElem.querySelectorAll('p');
+                        
+                        for (const para of allParagraphs) {
+                            if (para.textContent.trim().length > 50 && 
+                                !para.closest('.breadcrumb') && 
+                                !para.closest('.meta') &&
+                                !para.closest('.author-info')) {
+                                contentParagraphs.push(para.outerHTML);
+                            }
+                        }
+                        
+                        if (contentParagraphs.length > 0) {
+                            mainContent = contentParagraphs.join('');
+                        } else {
+                            mainContent = "Could not extract article content. Please try copying the article text manually.";
+                        }
+                    }
+                } else {
+                    mainContent = "Could not find article content. Please try the manual method instead.";
+                }
+                
+                // If there are collected images but they're not in the main content,
+                // make sure to include them in the email
+                let contentWithImages = mainContent;
+                if (filterSettings.preserveImages) {
+                    const contentDiv = document.createElement('div');
+                    contentDiv.innerHTML = mainContent;
+                    
+                    // Check if images are already present in the content
+                    const contentImages = contentDiv.querySelectorAll('img');
+                    
+                    // If we have a featured image and it's not already in the content,
+                    // add it to the beginning
+                    if (featuredImage && 
+                        (!contentImages.length || 
+                         !Array.from(contentImages).some(img => img.src === featuredImage.src))) {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.style.textAlign = 'center';
+                        imgContainer.style.margin = '20px auto';
+                        imgContainer.appendChild(featuredImage);
+                        contentDiv.insertBefore(imgContainer, contentDiv.firstChild);
+                    }
+                    
+                    // If we still don't have any images in the content,
+                    // add the collected article images
+                    const updatedContentImages = contentDiv.querySelectorAll('img');
+                    if (updatedContentImages.length === 0 && allArticleImages.length > 0) {
+                        const imageContainer = document.createElement('div');
+                        imageContainer.style.textAlign = 'center';
+                        
+                        allArticleImages.forEach(img => {
+                            const imgWrapper = document.createElement('div');
+                            imgWrapper.style.margin = '20px 0';
+                            imgWrapper.appendChild(img);
+                            imageContainer.appendChild(imgWrapper);
+                        });
+                        
+                        // Add images at the beginning of content
+                        contentDiv.insertBefore(imageContainer, contentDiv.firstChild);
+                    }
+                    
+                    // Ensure all images have proper styling
+                    const allImages = contentDiv.querySelectorAll('img');
+                    allImages.forEach(img => {
+                        img.style.display = 'block';
+                        img.style.margin = '15px auto';
+                        img.style.maxWidth = '100%';
+                        // Ensure image has width and height attributes for better loading
+                        if (!img.getAttribute('width')) {
+                            img.setAttribute('width', '100%');
+                        }
+                    });
+                    
+                    contentWithImages = contentDiv.innerHTML;
+                }
+                
+                // Get font and color settings
+                const fontFamily = document.getElementById('preview_font')?.value || 'Rubik';
+                const headerColor = document.getElementById('preview_header_color')?.value || '#2980b9';
+                const buttonColor = document.getElementById('preview_button_color')?.value || '#2980b9';
+                
+                // Create email marketing
+                createEmailMarketing(title, contentWithImages, logoUrl, fontFamily, headerColor, buttonColor);
+                
+                // Clear error messages
+                hideError();
+            } catch (error) {
+                showError('Error processing content: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        // Create email marketing from content
+        function createEmailMarketing(title, content, logoUrl, fontFamily = 'Rubik', headerColor = '#2980b9', buttonColor = '#2980b9') {
+            const emailTemplate = `
+                <!DOCTYPE html>
+                <html lang="en" dir="ltr">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>${title}</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body {
+                            font-family: ${fontFamily}, sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            margin: 0;
+                            padding: 0;
+                            background-color: #f9f9f9;
+                        }
+                        .email-container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            background-color: white;
+                            border-radius: 8px;
+                            overflow: hidden;
+                            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                        }
+                        .email-header {
+                            text-align: center;
+                            padding: 25px;
+                            background-color: ${headerColor};
+                            color: white;
+                        }
+                        .email-logo {
+                            max-width: 180px;
+                            height: auto;
+                            margin: 0 auto 15px auto;
+                            display: block;
+                        }
+                        .email-content {
+                            padding: 30px;
+                            background-color: white;
+                        }
+                        .email-footer {
+                            padding: 20px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777;
+                            background-color: #f8f9fa;
+                        }
+                        h1, h2, h3 {
+                            color: #2c3e50;
+                        }
+                        img {
+                            max-width: 100%;
+                            height: auto;
+                            border-radius: 4px;
+                            margin: 15px auto;
+                            display: block;
+                        }
+                        a {
+                            color: ${buttonColor};
+                            text-decoration: none;
+                        }
+                        .button {
+                            display: inline-block;
+                            padding: 12px 24px;
+                            background-color: ${buttonColor};
+                            color: white;
+                            text-decoration: none;
+                            border-radius: 4px;
+                            font-weight: 500;
+                            margin: 20px 0;
+                        }
+                        .email-divider {
+                            height: 2px;
+                            background-color: ${headerColor};
+                            margin: 20px 0;
+                        }
+                        .social-links {
+                            margin-top: 15px;
+                        }
+                        .social-links a {
+                            display: inline-block;
+                            margin: 0 5px;
+                        }
+                        .social-icon {
+                            width: 32px;
+                            height: 32px;
+                        }
+                        /* Additional styles to match blog appearance */
+                        .article-container {
+                            font-size: 16px;
+                        }
+                        .article-container h2 {
+                            color: ${headerColor};
+                            margin-top: 30px;
+                        }
+                        .article-container p {
+                            margin-bottom: 16px;
+                            line-height: 1.7;
+                        }
+                        .article-container ul {
+                            padding-left: 20px;
+                        }
+                        .article-container li {
+                            margin-bottom: 8px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="email-container">
+                        <div class="email-header" id="email_header">
+                            ${logoUrl ? `<img src="${logoUrl}" alt="Logo" class="email-logo" id="email_logo">` : ''}
+                            <h1 id="email_title">${title}</h1>
+                        </div>
+                        <div class="email-content">                            
+                            <div class="article-container" id="email_content">
+                                ${content}
+                            </div>
+                            
+                            <div class="email-divider"></div>
+                            
+                            <p style="text-align: center;" id="email_cta_text">Want to learn more? Visit our website for exclusive offers!</p>
+                            <div style="text-align: center;" id="email_cta_button">
+                                <a href="#" class="button">DISCOVER MORE</a>
+                            </div>
+                        </div>
+                        <div class="email-footer" id="email_footer">
+                            <div class="social-links" id="email_social">
+                                <a href="#"><img src="https://cdn-icons-png.flaticon.com/128/733/733547.png" alt="Facebook" class="social-icon"></a>
+                                <a href="#"><img src="https://cdn-icons-png.flaticon.com/128/733/733579.png" alt="Twitter" class="social-icon"></a>
+                                <a href="#"><img src="https://cdn-icons-png.flaticon.com/128/733/733558.png" alt="Instagram" class="social-icon"></a>
+                                <a href="#"><img src="https://cdn-icons-png.flaticon.com/128/733/733609.png" alt="Pinterest" class="social-icon"></a>
+                            </div>
+                            <p>© ${new Date().getFullYear()} All Rights Reserved</p>
+                            <p>You received this email because you subscribed to our newsletter. <a href="#">Unsubscribe</a></p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            // Show email preview
+            document.getElementById('emailContent').innerHTML = emailTemplate;
+            document.getElementById('htmlCode').value = emailTemplate;
+            document.getElementById('emailPreview').style.display = 'block';
+            
+            // Set preview options
+            document.getElementById('preview_font').value = fontFamily;
+            document.getElementById('preview_header_color').value = headerColor;
+            document.getElementById('preview_button_color').value = buttonColor;
+            
+            // Scroll to preview
+            document.getElementById('emailPreview').scrollIntoView({ behavior: 'smooth' });
+            
+            showStatus('Email marketing preview generated successfully!');
+        }
+        
+        // Helper function to show error messages
+        function showError(message) {
+            const errorElem = document.getElementById('errorMessage');
+            errorElem.textContent = message;
+            errorElem.style.display = 'block';
+        }
+        
+        // Helper function to hide error message
+        function hideError() {
+            const errorElem = document.getElementById('errorMessage');
+            errorElem.textContent = '';
+            errorElem.style.display = 'none';
+        }
+
+        // Helper function to show loading animation
+        function showLoading(show) {
+            document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
+        }
+        
+// Helper function to preload and process images in the email template
+        function preloadEmailImages() {
+            const emailContainer = document.querySelector('#emailContent .email-container');
+            if (!emailContainer) return Promise.resolve(); // Return resolved promise if no container
+            
+            const images = emailContainer.querySelectorAll('img');
+            const imagePromises = [];
+            
+            images.forEach(img => {
+                if (!img.complete) {
+                    const promise = new Promise((resolve) => {
+                        img.onload = () => resolve();
+                        img.onerror = () => resolve(); // Resolve even if error to prevent hanging
+                    });
+                    imagePromises.push(promise);
+                }
+                
+                // Set explicit width attributes to ensure the images display well
+                if (!img.getAttribute('width') && !img.style.width) {
+                    img.style.width = '100%';
+                    img.style.maxWidth = '100%';
+                }
+                
+                // Make sure all images are displayed as blocks with proper margins
+                img.style.display = 'block';
+                img.style.margin = '15px auto';
+            });
+            
+            return Promise.all(imagePromises);
+        }
+        
+        // Find the main featured image with improved detection - enhanced for prettyhow.com
+        function findFeaturedImage(doc, blogUrl) {
+            let featuredImage = null;
+            
+            // Specific selector for prettyhow.com
+            // First try the common article featured image container
+            const prettyhowSelectors = [
+                '.wp-block-image img', // Block images in WordPress
+                '.article-container .wp-block-image img', // Block images inside article container
+                '.entry-content .wp-block-image img', // Block images inside entry content
+                '.entry-content > figure:first-of-type img', // First figure in entry content
+                '.entry-content > p:first-of-type img', // First paragraph image
+                '.entry-content img:first-of-type' // First image in entry content
+            ];
+            
+            // Try prettyhow.com specific selectors first
+            for (const selector of prettyhowSelectors) {
+                const img = doc.querySelector(selector);
+                if (img && img.src) {
+                    // Make sure it's not a small thumbnail
+                    const width = img.getAttribute('width');
+                    const height = img.getAttribute('height');
+                    
+                    if (!width || !height || (parseInt(width) > 200 && parseInt(height) > 150)) {
+                        featuredImage = img.cloneNode(true);
+                        break;
+                    }
+                }
+            }
+            
+            // If no image was found with prettyhow selectors, try general selectors
+            if (!featuredImage) {
+                // Generic featured image selectors, prioritizing full-size hero images
+                const genericSelectors = [
+                    '.post-thumbnail img', 
+                    '.featured-image img', 
+                    '.wp-post-image',
+                    '.hero-image img',
+                    '.post-image img',
+                    '.entry-thumbnail img',
+                    '.post-feat-image img',
+                    'article img:first-of-type',
+                    '.single-featured img',
+                    '.thumbnail img',
+                    // More broad selectors as fallbacks
+                    'header img:first-of-type',
+                    '.main-content img:first-of-type',
+                    '.content img:first-of-type',
+                    'img.size-full'
+                ];
+                
+                for (const selector of genericSelectors) {
+                    const img = doc.querySelector(selector);
+                    if (img && img.src && !img.src.includes('-150x150') && !img.classList.contains('avatar')) {
+                        // Check if image has reasonable dimensions (likely not tiny icons)
+                        const width = img.getAttribute('width');
+                        const height = img.getAttribute('height');
+                        
+                        // If width and height are available, check for minimum size
+                        if (!width || !height || (parseInt(width) > 200 && parseInt(height) > 150)) {
+                            featuredImage = img.cloneNode(true);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // If still no featured image found, search the full document for large images
+            if (!featuredImage) {
+                // Get all images in the document and find the largest one
+                const allImages = doc.querySelectorAll('img');
+                let largestImage = null;
+                let largestArea = 0;
+                
+                for (const img of allImages) {
+                    // Skip small images, avatars, emoji, etc.
+                    if (!img.src.includes('-150x150') && 
+                        !img.classList.contains('avatar') && 
+                        !img.classList.contains('wp-smiley') &&
+                        !img.src.includes('emoji')) {
+                        
+                        const width = img.getAttribute('width') || img.style.width || 0;
+                        const height = img.getAttribute('height') || img.style.height || 0;
+                        
+                        // Try to get numeric values
+                        const numWidth = parseInt(width);
+                        const numHeight = parseInt(height);
+                        
+                        // Check if image has size attributes and is large enough
+                        if ((numWidth > 0 && numHeight > 0) && (numWidth * numHeight > largestArea)) {
+                            largestArea = numWidth * numHeight;
+                            largestImage = img;
+                        }
+                        // If no size attributes, check the src URL for size indicators
+                        else if (img.src.includes('/wp-content/uploads/') && !img.src.includes('-150x150')) {
+                            // This is likely a WordPress featured image
+                            featuredImage = img.cloneNode(true);
+                            break;
+                        }
+                    }
+                }
+                
+                // Use the largest image found if we have one
+                if (largestImage && !featuredImage) {
+                    featuredImage = largestImage.cloneNode(true);
+                }
+                
+                // If we still don't have an image, use the first image in wp-content/uploads
+                if (!featuredImage) {
+                    for (const img of allImages) {
+                        if (img.src.includes('/wp-content/uploads/')) {
+                            featuredImage = img.cloneNode(true);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // Fix the featured image URL if it's relative
+            if (featuredImage && featuredImage.src) {
+                let imgSrc = featuredImage.src;
+                if (imgSrc && (imgSrc.startsWith('/') || !imgSrc.startsWith('http'))) {
+                    try {
+                        const urlObj = new URL(blogUrl);
+                        if (imgSrc.startsWith('/')) {
+                            imgSrc = urlObj.origin + imgSrc;
+                        } else {
+                            const pathParts = urlObj.pathname.split('/');
+                            pathParts.pop();
+                            const basePath = pathParts.join('/');
+                            imgSrc = urlObj.origin + basePath + '/' + imgSrc;
+                        }
+                        featuredImage.src = imgSrc;
+                    } catch (e) {
+                        console.error('Error fixing featured image URL:', e);
+                    }
+                }
+            }
+            
+            return featuredImage;
+        }
+        
+        // Download HTML button
+        document.getElementById('downloadHtml').addEventListener('click', function() {
+            const htmlContent = document.getElementById('htmlCode').value;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'email-marketing-campaign.html';
+            document.body.appendChild(a);
+            a.click();
+            
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            showStatus('Email HTML file downloaded!');
+        });
+
+        // Tab button event handlers
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to current tab
+                this.classList.add('active');
+                
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show current tab content
+                if (tabId === 'auto') {
+                    document.getElementById('autoTab').classList.add('active');
+                } else if (tabId === 'manual') {
+                    document.getElementById('manualTab').classList.add('active');
+                }
+            });
+        });
+
+        // Preview tab button event handlers
+        document.querySelectorAll('[data-preview-tab]').forEach(button => {
+            button.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-preview-tab');
+                
+                // Remove active class from all tabs
+                document.querySelectorAll('[data-preview-tab]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to current tab
+                this.classList.add('active');
+                
+                // Hide all preview content
+                document.getElementById('visualPreview').classList.remove('active');
+                document.getElementById('htmlPreview').classList.remove('active');
+                
+                // Show current tab content
+                if (tabId === 'visual') {
+                    document.getElementById('visualPreview').classList.add('active');
+                } else if (tabId === 'html') {
+                    document.getElementById('htmlPreview').classList.add('active');
+                }
+            });
+        });
+
+        // Send via Gmail button
+        document.getElementById('sendGmail').addEventListener('click', function() {
+            const title = document.querySelector('.email-header h1').textContent;
+            const emailContent = document.getElementById('htmlCode').value;
+            
+            // Alert to inform the user about sending issues
+            alert('Due to email client limitations, Gmail doesn\'t fully support HTML emails. Please use the "Download Email" option instead, and use an email marketing service like Mailchimp, SendGrid, or similar to send your campaign.');
+            
+            // Try to open the Gmail compose window anyway
+            const subject = encodeURIComponent(title);
+            const body = encodeURIComponent('Please view this email with HTML support enabled.');
+            window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`, '_blank');
+        });
+
+        // Debug button
+        document.getElementById('debugBtn').addEventListener('click', function() {
+            const debugWindow = window.open('', '_blank');
+            const emailContent = document.getElementById('htmlCode').value;
+            debugWindow.document.write(emailContent);
+            debugWindow.document.close();
+            
+            showStatus('Debug view opened in new tab');
+        });
+        
+        // Update preview based on sidebar settings
+        document.getElementById('update_preview').addEventListener('click', function() {
+            // Get the current email content
+            const emailContent = document.getElementById('emailContent');
+            
+            // Get the settings
+            const showHeader = document.getElementById('show_header').checked;
+            const showLogo = document.getElementById('show_logo').checked;
+            const showTitle = document.getElementById('show_title').checked;
+            const showContent = document.getElementById('show_content').checked;
+            const showCta = document.getElementById('show_cta').checked;
+            const showFooter = document.getElementById('show_footer').checked;
+            const showSocial = document.getElementById('show_social').checked;
+            
+            const fontFamily = document.getElementById('preview_font').value;
+            const headerColor = document.getElementById('preview_header_color').value;
+            const buttonColor = document.getElementById('preview_button_color').value;
+            
+            // Apply settings
+            const emailHeader = emailContent.querySelector('.email-header');
+            if (emailHeader) {
+                emailHeader.style.display = showHeader ? 'block' : 'none';
+                emailHeader.style.backgroundColor = headerColor;
+            }
+            
+            const emailLogo = emailContent.querySelector('.email-logo');
+            if (emailLogo) {
+                emailLogo.style.display = showLogo ? 'block' : 'none';
+            }
+            
+            const emailTitle = emailContent.querySelector('.email-header h1');
+            if (emailTitle) {
+                emailTitle.style.display = showTitle ? 'block' : 'none';
+            }
+            
+            const articleContainer = emailContent.querySelector('.article-container');
+            if (articleContainer) {
+                articleContainer.style.display = showContent ? 'block' : 'none';
+            }
+            
+            const ctaText = emailContent.querySelector('#email_cta_text');
+            const ctaButton = emailContent.querySelector('#email_cta_button');
+            if (ctaText && ctaButton) {
+                ctaText.style.display = showCta ? 'block' : 'none';
+                ctaButton.style.display = showCta ? 'block' : 'none';
+            }
+            
+            const emailFooter = emailContent.querySelector('.email-footer');
+            if (emailFooter) {
+                emailFooter.style.display = showFooter ? 'block' : 'none';
+            }
+            
+            const socialLinks = emailContent.querySelector('.social-links');
+            if (socialLinks) {
+                socialLinks.style.display = showSocial ? 'block' : 'none';
+            }
+            
+            // Update font and colors
+            const container = emailContent.querySelector('.email-container');
+            if (container) {
+                container.style.fontFamily = fontFamily;
+            }
+            
+            // Update button color
+            const buttons = emailContent.querySelectorAll('.button');
+            buttons.forEach(button => {
+                button.style.backgroundColor = buttonColor;
+            });
+            
+            // Update links color
+            const links = emailContent.querySelectorAll('a:not(.button)');
+            links.forEach(link => {
+                link.style.color = buttonColor;
+            });
+            
+            // Update divider color
+            const dividers = emailContent.querySelectorAll('.email-divider');
+            dividers.forEach(divider => {
+                divider.style.backgroundColor = headerColor;
+            });
+            
+            // Update HTML code too
+            const htmlCode = document.getElementById('htmlCode');
+            htmlCode.value = emailContent.innerHTML;
+            
+            showStatus('Preview updated!');
+        });
+        
+        // Enhanced screenshot functionality that properly captures images
+        document.getElementById('takeScreenshot').addEventListener('click', async function() {
+            const emailContainer = document.querySelector('#emailContent .email-container');
+            
+            if (!emailContainer) {
+                showStatus('No email content to capture', 5000);
+                return;
+            }
+            
+            showStatus('Creating screenshot... This may take a moment', 5000);
+            
+            try {
+                // First ensure all images are loaded
+                await preloadEmailImages();
+                
+                // Clone the email container to a separate container for screenshot
+                const screenshotContent = document.getElementById('screenshotContent');
+                screenshotContent.innerHTML = '';
+                const clone = emailContainer.cloneNode(true);
+                
+                // Apply specific styling for better screenshot quality
+                clone.style.width = '600px'; // Fixed width for email
+                clone.style.margin = '0 auto';
+                
+                // Ensure all images in the clone are properly sized
+                const allImages = clone.querySelectorAll('img');
+                allImages.forEach(img => {
+                    img.style.display = 'block';
+                    img.style.margin = '15px auto';
+                    img.style.maxWidth = '100%';
+                    // Add explicit width if not present
+                    if (!img.getAttribute('width')) {
+                        img.setAttribute('width', '100%');
+                    }
+                });
+                
+                screenshotContent.appendChild(clone);
+                
+                // Show the screenshot container
+                document.getElementById('screenshotContainer').style.display = 'block';
+                
+                // Use html2canvas with enhanced settings
+                html2canvas(clone, {
+                    scale: 2, // Higher scale for better quality
+                    useCORS: true, // Try to load cross-origin images
+                    logging: false,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    imageTimeout: 15000, // Longer timeout for image loading
+                    onclone: (clonedDoc) => {
+                        // Additional modifications to the cloned document if needed
+                        const clonedImages = clonedDoc.querySelectorAll('img');
+                        clonedImages.forEach(img => {
+                            // Force images to be visible in the screenshot
+                            img.style.display = 'block';
+                            img.style.visibility = 'visible';
+                            img.style.opacity = '1';
+                        });
+                    }
+                }).then(canvas => {
+                    // Clear the container and add the canvas
+                    screenshotContent.innerHTML = '';
+                    
+                    // Make sure canvas displays at 100% width
+                    canvas.style.width = '100%';
+                    canvas.style.maxWidth = '100%';
+                    canvas.style.height = 'auto';
+                    canvas.style.borderRadius = '8px';
+                    canvas.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                    
+                    screenshotContent.appendChild(canvas);
+                    
+                    // Setup download button
+                    document.getElementById('downloadScreenshot').onclick = function() {
+                        const link = document.createElement('a');
+                        link.download = 'email-screenshot.png';
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                        showStatus('Screenshot downloaded!');
+                    };
+                }).catch(err => {
+                    console.error('Error creating screenshot:', err);
+                    showStatus('Error creating screenshot. Please try again.', 5000);
+                });
+            } catch (error) {
+                console.error('Error preparing screenshot:', error);
+                showStatus('Error preparing screenshot. Please try again.', 5000);
+            }
+        });
+        
+        // Close screenshot view
+        document.getElementById('screenshotClose').addEventListener('click', function() {
+            document.getElementById('screenshotContainer').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
